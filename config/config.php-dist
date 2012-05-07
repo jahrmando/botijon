@@ -1,0 +1,26 @@
+<?php
+$config = new stdClass();
+
+//set the following values accordingly
+$config->server = "irc.freenode.net";
+$config->port = 6667;
+$config->nick = 'the bot name here';
+$config->password = 'the password';
+$config->realname = "botijon";
+
+//this lines don't need change
+$config->pidDir = $systemroot . "/pid/";	
+$config->commandsDir= $systemroot . "/commands/";
+
+//set to true only if you are debugging something
+$config->debug = false; //prints some extra information that cuould be useful for debugging purposes
+
+//set the character that will be used as a command identifier to the bot
+$config->commandchar = '!';
+
+
+//set the channels the bot will enter
+$config->channels = array("#channel1", "#channel2", "#channel3");	
+$config->maxMessages[3] = 4; //4 messages in 3 seconds
+$config->maxMessages[4] = 6; //6 messages in 4 seconds
+$config->maxMessages[5] = 9; //9 messages in 5 seconds
