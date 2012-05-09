@@ -20,18 +20,6 @@ class seen extends command {
 		
 		$nick = $args;
 		
-		
-		//mysql> select *,datediff(now(), messagetime) as daysdiff, timediff(now(), messagetime) as hourdiff from  chatlastseen  where  nick = 'chio' and  channel = '#juchipila';
-		//+------+------------+-----------------------------+---------------------+----------+----------+
-		//| nick | channel    | message                     | messagetime         | daysdiff | hourdiff |
-		//+------+------------+-----------------------------+---------------------+----------+----------+
-		//| ChiO | #juchipila | ¡Long Life to Cello Metal! | 2009-08-08 21:19:18 |        0 | 01:44:15 | 
-		//+------+------------+-----------------------------+---------------------+----------+----------+
-		//1 row in set (0.00 sec)
-		
-				
-		
-		
 		$sql = "select 
 					*,
 					datediff(now(), messagetime) as daysdiff,
@@ -44,9 +32,11 @@ class seen extends command {
 					channel = :channel";
 		$r = $db->Parse($sql, 1);
 		$r->Bind(":nick", $nick);
-		$r->Bind(":channel", $this->channel);
+		$r->Bind(":channel", $this->currentchannel);
 		$r->Execute();
 		$row = $r->GetRow();
+
+	
 		if ( empty($row)){
 			$this->output = "No se tienen registros del usuario {$nick}";
 		} else {
@@ -70,13 +60,13 @@ class seen extends command {
 					$timeellapsed = " 1 segundo ";
 				}
 				
-				$this->output = "El usuario {$nick} fue visto por última vez en {$this->channel} hace {$timeellapsed} diciendo: \"{$row->message}\"";
+				$this->output = "El usuario {$nick} fue visto por última vez en {$this->currentchannel} hace {$timeellapsed} diciendo: \"{$row->message}\"";
 			} else {
 				$timeellapsed .= $row->daysdiff . ' día';
 				if ($row->daysdiff > 1 ) {
 					$timeellapsed .= 's';
 				}				
-				$this->output = "El usuario {$nick} fue visto por última vez en {$this->channel} hace {$timeellapsed} diciendo: \"{$row->message}\"";
+				$this->output = "El usuario {$nick} fue visto por última vez en {$this->currentchannel} hace {$timeellapsed} diciendo: \"{$row->message}\"";
 
 			} 					
 		}
