@@ -57,9 +57,11 @@ class google extends command {
 		if ( empty($results)){
 			$this->output = 'No results, sorry.';
 		} else {
-			foreach ($results as $key => $result){
+			$count = 0;
+			foreach ($results as $result){
 				$this->output .= $result->url . "\n";
-				if ( $key >= 3 ) break;
+				$count++;
+				if ( $count >= 3 ) break;
 			}
 		}		
 	}
