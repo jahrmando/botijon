@@ -415,7 +415,7 @@ class ircbot{
 				
 				$command = new $commandname($arguments);
 				$command->setSocket($this->socket);
-				$command->setCurrentChannel($channel);	
+				$command->setCurrentChannel($channel);
 				$command->setAdminFlag($isadmin);
 				$command->setNick($nick);
 
