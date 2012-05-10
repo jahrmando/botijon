@@ -9,7 +9,7 @@ class quit extends command {
 	public function help(){
 		return "Uso: !quit ";
 	}
-	
+
 	public function process($args){
 		$cmd = "PRIVMSG " . $this->currentchannel . " :Adios\n";
 		fwrite($this->socket, $cmd, strlen($cmd)); //sends the command to the server
@@ -19,18 +19,18 @@ class quit extends command {
 		fwrite($this->socket, $cmd, strlen($cmd)); //sends the command to the server
 		echo $cmd; //displays it on the screen
 	}
-	
+
 	public function afterprocess($args=''){
 		global $pid;
-		global $bot;
+		global $irc;
 		if ( $this->issuedbyadmin){
-			foreach ($bot->channels as $channel){
+			foreach ($irc->channels as $channel){
 				$cmd = "PART {$channel}\n";
 				fwrite($this->socket, $cmd, strlen($cmd)); //sends the command to the server
-				echo $cmd; //displays it on the screen				
+				echo $cmd; //displays it on the screen
 			}
-			unset($pid);			
+			unset($pid);
 			die();
-		}		
+		}
 	}
 }
