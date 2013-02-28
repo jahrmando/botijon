@@ -2,4 +2,5 @@ config/config.php
 config/dbconfig.php
 sql/phpfunctions.sql
 sql/databasedump.sql
+*.komodoproject
 pid/bot.pid

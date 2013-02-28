@@ -181,6 +181,7 @@ class ircbot{
 
 	public function runloop(){
 		global $db;
+		$lastdbrefresh = time();
 		while(! feof($this->socket)){
 			//get a line of data from the server
 			$currentline = trim(fgets($this->socket, 1024));
@@ -262,6 +263,14 @@ class ircbot{
 			}
 
 			flush(); //This flushes the output buffer forcing the text in the while loop to be displayed "On demand"
+			
+			$currenttime = time();
+			if ( $currenttime - $lastdbrefresh > 60*5){
+				$db = new clsDb();
+				if ( ! $db instanceof clsDb ){
+					throw new Exception('No se pudo instanciar la clase manejadora de la base de datos');
+				}
+			}
 		}
 	}
 
