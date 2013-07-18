@@ -30,7 +30,7 @@ use `your db name here`;
 -- Table structure for table `functions`
 --
 
---DROP TABLE IF EXISTS `functions`;
+
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE  if not exists `functions` (
@@ -65,7 +65,7 @@ create index `idx_chatlogins_nick` on `chatlogins`(`nick`);
 
 create table if not exists `chatbans` (
 	`banid` int unsigned NOT NULL auto_increment,
-	`ip` varchar(15), 
+	`ip` varchar(15),
 	`mask` varchar(100),
 	`nick` varchar(20),
 	`bandate` timestamp default current_timestamp,
@@ -83,7 +83,7 @@ create index `idx_chatbans_nick` on `chatbans`(`nick`);
 
 create table if not exists `banhistory` (
 	`banid` int unsigned NOT NULL auto_increment,
-	`ip` varchar(15), 
+	`ip` varchar(15),
 	`mask` varchar(100),
 	`nick` varchar(20),
 	`bandate` timestamp default current_timestamp,
