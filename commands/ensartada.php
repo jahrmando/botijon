@@ -4,13 +4,13 @@ class ensartada extends command {
 	public function __construct(){
 		$this->name = 'ensartada';
 		$this->public = true;
-		$this->channels = array("#linux_mx");
+		$this->channels = array("#linux.mx");
 		$this->server = 'irc.freenode.net';
 		$this->labels = Array ( 'ensartadaid' => 'Ensartada #', 'ensartado' => 'Ensartado', 'enviadapor' => 'Enviada por', 'fecha' => 'Fecha', 'comentario' => 'Comentario');
 	}
 
 	public function help(){
-		return "Uso: !ensartada. Lanza una ensartada al azar";
+		return "Uso: !ensartada. Lanza una ensartada al azar ó !ensartada #ensartada";
 	}
 
 	public function process($args=null){
@@ -18,7 +18,9 @@ class ensartada extends command {
 		if ( $num > 0 ) {
 			$url = "http://linux-mx.org/ensartada/json/$num";
 		} else {
-			$url = "http://linux-mx.org/ensartada/json/";	
+			$num = (int) 0;
+			$num = rand($num, 500);
+			$url = "http://linux-mx.org/ensartada/json/$num";	
 		}
 		$this->output = "";
 		try{
