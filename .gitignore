@@ -4,3 +4,4 @@ sql/phpfunctions.sql
 sql/databasedump.sql
 *.komodoproject
 pid/bot.pid
+nohup.out
