@@ -59,7 +59,7 @@ class clsDb{
 
 	public function Parse ($SQL, $newcontainer = 1) {
 		if ($newcontainer) {
-			return new clsdbcontainer (&$this, $SQL);
+			return new clsdbcontainer ($this, $SQL);
 		} else {
 			preg_match_all ("/(:\w*)/", $SQL, $bindvars);
 		}
@@ -339,7 +339,7 @@ class clsDb{
 }
 
 class clsdbcontainer extends clsdb {
-	public function __construct($db, $SQL) {
+	public function __construct(&$db, $SQL) {
 		$this->connection =& $db->connection;
 		$this->autocommit =& $db->autocommit;
 		$this->Parse ($SQL, 0);
