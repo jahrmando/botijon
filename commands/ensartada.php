@@ -4,7 +4,7 @@ class ensartada extends command {
 	public function __construct(){
 		$this->name = 'ensartada';
 		$this->public = true;
-		$this->channels = array("#linux.mx");
+		$this->channels = array("#linux.mx", "#linux.mx.testing");
 		$this->server = 'irc.freenode.net';
 		$this->labels = Array ( 'ensartadaid' => 'Ensartada #', 'ensartado' => 'Ensartado', 'enviadapor' => 'Enviada por', 'fecha' => 'Fecha', 'comentario' => 'Comentario');
 	}
@@ -16,32 +16,24 @@ class ensartada extends command {
 	public function process($args=null){
 		$num = (int) $args;
 		if ( $num > 0 ) {
-			$url = "http://linux-mx.org/ensartada/json/$num";
+			$url = "http://www.linux-mx.org/ensartada/{$num}/irc/";
 		} else {
 			$num = (int) 0;
 			$num = rand($num, 500);
-			$url = "http://linux-mx.org/ensartada/json/$num";	
+			$url = "http://www.linux-mx.org/ensartada/{$num}/irc/";
 		}
 		$this->output = "";
 		try{
 			$ensartada = file_get_contents($url);
-			$temp = json_decode($ensartada);
-			$lines = array();
+			$templines = preg_split("/\n/", $ensartada, null, PREG_SPLIT_NO_EMPTY);
 		} catch ( Exception $e){
 			print $e->getMessage();
 			$this->reply("No se pudo obtener la ensartada.", $this->channel);
 			return;
 		}
-		foreach ( $temp as $var => $val ) {
-			if ( ! is_array($val) ) {
-				$var = html_entity_decode($var);
-				$lines[] = $this->labels[$var] . ": $val";
-			} else {
-				foreach ( $val as $val2 ) {
-					$lines[] = html_entity_decode($val2);
-				}
-			}
+		foreach ( $templines as $key => $value ) {
+			$lines[] = html_entity_decode($value);
 		}
-		$this->output = join("\n", $lines);	
+		$this->output = join("\n", $lines);
 	}
 }
