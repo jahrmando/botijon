@@ -28,6 +28,13 @@ if ( ! include_once("config/config.php")){
 	throw new Exception('No se pudo incluir el archivo de configuracion del bot.');
 }
 
+//include twitter configuration file if it exists
+if ( file_exists('config/twitter-config.php')){
+	if ( ! include_once("config/twitter-config.php")){
+		throw new Exception('No se pudo incluir el archivo de configuracion del bot.');
+	}
+}
+
 //include irc bot class
 if ( ! include_once("include/ircbot.php")){
 	throw  new Exception('No se pudo incluir la clase ircbot.php');
@@ -55,7 +62,7 @@ if ( ! $db instanceof clsDb ){
 $formattingchars = array();
 $formattingchars[] = chr(hexdec('1f'));//underline
 $formattingchars[] = chr(hexdec('0f'));//underline
-$formattingchars[] = chr(hexdec(2)); //bold 
+$formattingchars[] = chr(hexdec(2)); //bold
 $formattingchars[] = chr(hexdec(16)); //white text on black background
 
 $colorcode = chr(hexdec(3));//color character

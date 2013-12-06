@@ -53,7 +53,7 @@ if ( $ip == '216.239.132.66' ){ //esta ip es la que finalmente el bot estara usa
 	$config->adminips[] = '216.239.129.23';
 	$config->adminips[] = '2607:fe90:2:0:223:54ff:fe27:42e0';
 	$config->adminips[] = 'joel.omnis.com';
-	$config->channels = array("#linux.mx");
+	$config->channels = array("#linux.mx.testing");
 	$config->maxMessages[3] = 4; //4 messages in 3 seconds
 	$config->maxMessages[4] = 6; //6 messages in 4 seconds
 	$config->maxMessages[5] = 9; //9 messages in 5 seconds

@@ -10,11 +10,12 @@ class twitter extends command {
 	{
 		$this->name = "twitter";
 		$this->public = true;
+		global $config;
 		$this->config =array(
-		"consumer_key"		=>	"your consumer key",
-		"consumer_secret"	=>	"your consumer secret",
-		"access_token"		=>	"your access token",
-		"access_secret"		=>	"your access secret"
+			"consumer_key"		=>	$config->twitter->consumer_key,
+			"consumer_secret"	=>	$config->twitter->consumer_secret,
+			"access_token"		=>	$config->twitter->access_token,
+			"access_secret"		=>	$config->twitter->access_token_secret
 		);
 	}
 
@@ -40,20 +41,20 @@ class twitter extends command {
 				if( $hashtag == false && count($twitter_data)>0){
 					$this->output = $twitter_data[0]->text;
 				}elseif( $hashtag && isset($twitter_data->statuses) ){
-					$tuits = array();
-					foreach( $twitter_data->statuses as $tuit ){
-						array_push( $tuits , $tuit->text );
+					$twits = array();
+					foreach( $twitter_data->statuses as $twit ){
+						array_push( $twits , $twit->text );
 					}
-					$this->output = join("\n", $tuits);
+					$this->output = join("\n", $twits);
 				}else{
 					if( is_array($twitter_data) ){
 						$this->output = "Ups, el usuario no existe.";
 					}else{
-						$this->output = "Es un usuario bloqueado y no tengo acceso a sus tuits.";
+						$this->output = "Es un usuario bloqueado y no tengo acceso a sus twits.";
 					}
 				}
 			}catch(Exception $e){
-				$this->output = "Es un usuario con candadito y no tengo acceso a sus tuits.";
+				$this->output = "Es un usuario con candado y no tengo acceso a sus twits.";
 			}
 		}else{
 			$this->output = "Ingresa un usuario.";

@@ -1,7 +1,8 @@
 config/config.php
 config/dbconfig.php
+config/twitter-config.php
 sql/phpfunctions.sql
 sql/databasedump.sql
 *.komodoproject
-pid/bot.pid
+pid/*
 nohup.out
