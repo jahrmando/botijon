@@ -14,14 +14,15 @@ class ensartada extends command {
 	}
 
 	public function process($args=null){
-		$num = (int) $args;
-		if ( $num > 0 ) {
-			$url = "http://www.linux-mx.org/ensartada/{$num}/irc/";
+		if ( is_numeric($args)){
+			$num = intval($args);
+			$num = abs($num);
 		} else {
-			$num = (int) 0;
-			$num = rand($num, 500);
-			$url = "http://www.linux-mx.org/ensartada/{$num}/irc/";
+			$num = intval( file_get_contents('http://www.linux-mx.org/ensartadas/random/'));
 		}
+
+		$url = "http://www.linux-mx.org/ensartada/{$num}/irc/";
+
 		$this->output = "";
 		try{
 			$ensartada = file_get_contents($url);
