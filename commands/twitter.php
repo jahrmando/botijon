@@ -29,10 +29,22 @@ class twitter extends command {
 			try{
 				$oauth = new OAuth( $this->config["consumer_key"], $this->config["consumer_secret"], OAUTH_SIG_METHOD_HMACSHA1, OAUTH_AUTH_TYPE_URI);
 				$oauth->setToken($this->config["access_token"], $this->config["access_secret"]);
-				$oauth->fetch("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name={$args}&count=1");
+				$hashtag = false;
+				if ( preg_match( "/^#/" , $args ) ){
+					$hashtag = true;
+					$oauth->fetch("https://api.twitter.com/1.1/search/tweets.json?q=".urlencode($args)."&count=3");
+				}else{
+					$oauth->fetch("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name={$args}&count=1");
+				}
 				$twitter_data = json_decode($oauth->getLastResponse());
-				if(count($twitter_data)>0){
+				if( $hashtag == false && count($twitter_data)>0){
 					$this->output = $twitter_data[0]->text;
+				}elseif( $hashtag && isset($twitter_data->statuses) ){
+					$tuits = array();
+					foreach( $twitter_data->statuses as $tuit ){
+						array_push( $tuits , $tuit->text );
+					}
+					$this->output = join("\n", $tuits);
 				}else{
 					if( is_array($twitter_data) ){
 						$this->output = "Ups, el usuario no existe.";
