@@ -15,12 +15,13 @@ class ensartada extends command {
 
 	public function process($args=null){
 		$num = (int) $args;
+		if( strtolower($args) == "ultima" ){
+			$num = (int) file_get_contents("http://linux-mx.org/ensartadas/latest/");
+		}
 		if ( $num > 0 ) {
 			$url = "http://www.linux-mx.org/ensartada/{$num}/irc/";
 		} else {
-			$num = (int) 0;
-			$num = rand($num, 500);
-			$url = "http://www.linux-mx.org/ensartada/{$num}/irc/";
+			$url = "http://linux-mx.org/ensartadaalazar/irc";
 		}
 		$this->output = "";
 		try{
