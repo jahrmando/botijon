@@ -45,10 +45,13 @@ abstract class command{
 	public function write(){
 		//to be overriden by children classes
 		$temp = preg_split("/\n/", $this->output, null, PREG_SPLIT_NO_EMPTY);
-		foreach ( $temp as $line){
+
+		foreach ( $temp as $linenumber => $line){
 			$this->reply($line);
-			usleep(300000);
+			$microseconds = $linenumber * 150000;
+			usleep($microseconds);
 		}
+
 	}
 
 	public function afterprocess($args = ''){
