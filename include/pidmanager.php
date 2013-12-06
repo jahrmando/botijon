@@ -26,17 +26,17 @@ class pidmanager {
 		global $config;
 		$this->piddir = $config->pidDir;
 		$this->dieonfatal = $dieonfatal;
-		$this->runname = ereg_replace(".php$","",basename($_SERVER["PHP_SELF"]));
+		$this->runname = str_replace(".php$","",basename($_SERVER["PHP_SELF"]));
 		$this->mypid = getmypid();
 
 		if ( !file_exists($this->piddir) || !is_dir($this->piddir) ) {
 			$this->fatal("PID Dir does not exist (".$this->piddir.")",1);
 			return false;
 		}
-		
+
 		if ( ! is_writable($this->piddir)){
 			$this->fatal("PID Dir is not writeable (".$this->piddir.")",1);
-			return false;			
+			return false;
 		}
 
 		$this->pidfile = $this->piddir . $this->runname . ".pid";
