@@ -7,6 +7,8 @@ mente la facilidad de agregar funcionalidad en forma sencilla, para otros fines.
 Funcionamiento
 -----------------------
 
+Renombra el arhivo <code>config/config-sample.php</code> a <code>config/config.php</code> y editalo con tu configuración (nick, canal, red, etc...)
+
 El bot se corre desde la linea de comandos de la siguiente forma:
 
 <code>/usr/bin/php /ruta/al/bot/bot.php</code> 
