@@ -35,6 +35,7 @@ class twitter extends command {
 					$hashtag = true;
 					$oauth->fetch("https://api.twitter.com/1.1/search/tweets.json?q=".urlencode($args)."&count=3");
 				}else{
+					$args = str_replace("@","",$args);
 					$oauth->fetch("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name={$args}&count=1");
 				}
 				$twitter_data = json_decode($oauth->getLastResponse());
