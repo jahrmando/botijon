@@ -1,8 +1,11 @@
 <?php
-
 /*
- * NOTA: Este comando requiere tener instalada la extension oauth para PHP
- * Esta puede ser instalada usando "pecl oauth" y agregando a su php.ini "extension=oauth.so" (Probado en debian)
+ * Es necesario configurar las API keys en config/twitter-config.php
+ *
+ * NOTA: Este comando hace uso de la extension OAuth para PHP
+ * Se recomienda su instalación por medio de "pecl oauth" y agregando a php.ini "extension=oauth.so"
+ * (Probado en Debian, Fedora)
+ *
  */
 
 class twitter extends command {
@@ -39,23 +42,24 @@ class twitter extends command {
 					$oauth->fetch("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name={$args}&count=1");
 				}
 				$twitter_data = json_decode($oauth->getLastResponse());
-				if( $hashtag == false && count($twitter_data)>0){
-					$this->output = $twitter_data[0]->text;
-				}elseif( $hashtag && isset($twitter_data->statuses) ){
-					$twits = array();
-					foreach( $twitter_data->statuses as $twit ){
-						array_push( $twits , $twit->text );
-					}
-					$this->output = join("\n", $twits);
-				}else{
-					if( is_array($twitter_data) ){
-						$this->output = "Ups, el usuario no existe.";
-					}else{
-						$this->output = "Es un usuario bloqueado y no tengo acceso a sus twits.";
-					}
+                if( $hashtag == false && count($twitter_data)>0){
+                    $date = date('d/m/y', strtotime($twitter_data[0]->created_at));
+                    $this->output = "@{$args}:{$date} - " . $twitter_data[0]->text;
+                }elseif( $hashtag && isset($twitter_data->statuses) ){
+                    $twits = array();
+                    foreach( $twitter_data->statuses as $twit ){
+                        array_push( $twits , $twit->text );
+                    }
+                    $this->output = "{$args}: " . join("\n", $twits);
+                }else{
+                    if( is_array($twitter_data) ){
+                        $this->output = "Ups! el usuario @{$args} no existe.";
+                    }else{
+                        $this->output = "El usuario @{$args} tiene sus twitts como privados.";
+                    }
 				}
 			}catch(Exception $e){
-				$this->output = "Es un usuario con candado y no tengo acceso a sus twits.";
+				$this->output = "No fue posible obtener twitts de {$args}. Ha ocurrido un error.";
 			}
 		}else{
 			$this->output = "Ingresa un usuario.";
