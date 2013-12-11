@@ -43,8 +43,8 @@ class twitter extends command {
 				}
 				$twitter_data = json_decode($oauth->getLastResponse());
                 if( $hashtag == false && count($twitter_data)>0){
-                    $date = date('d/m/y', strtotime($twitter_data[0]->created_at));
-                    $this->output = "@{$args}:{$date} - " . $twitter_data[0]->text;
+                    $date = date('d/m/y H:i', strtotime($twitter_data[0]->created_at));
+                    $this->output = "@{$args} : " . $twitter_data[0]->text . " -- {$date}";
                 }elseif( $hashtag && isset($twitter_data->statuses) ){
                     $twits = array();
                     foreach( $twitter_data->statuses as $twit ){
