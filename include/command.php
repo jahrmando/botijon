@@ -10,6 +10,7 @@ abstract class command{
 	public $issuedbyadmin = false;
 	public $nick;
 	public $server;
+	public $isquerymessage = false;
 
 	public function __construct(){
 		$this->name = '';
@@ -111,9 +112,19 @@ abstract class command{
 	public function reply($reply){
 		$reply = rtrim($reply);
 		$reply .= "\n";
-		if ( ! fwrite($this->socket, "PRIVMSG " . $this->currentchannel . " :" . $reply)){
-			throw new Exception('Could not send ' . $reply);
+		if ( $this->isquerymessage ){
+			if ( ! fwrite($this->socket, "PRIVMSG " . $this->nick . " :" . $reply)){
+				throw new Exception('Could not send ' . $reply);
+			}
+		} else {
+			if ( ! fwrite($this->socket, "PRIVMSG " . $this->currentchannel . " :" . $reply)){
+				throw new Exception('Could not send ' . $reply);
+			}
 		}
+	}
+
+	public function setQueryMessage($value){
+		$this->isquerymessage = $value;
 	}
 
 	public function __toString(){
