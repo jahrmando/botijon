@@ -9,11 +9,8 @@ try {
 	if ( ! include_once ("init.php")){
 		throw new Exception('No se pudo encontrar el archivo de inicialización.');
 	}
-	
 	$irc = new ircbot();
-	$irc->run();	
-	print $irc;	
-	
+	$irc->run();
 } catch (Exception $e){
 	print "Ocurrió un error durante la ejecucion: " . $e->getMessage();
 }
