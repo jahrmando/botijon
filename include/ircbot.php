@@ -13,14 +13,14 @@ class ircbot{
 	public $lastDbReload;
 	public $lastphrasetime = 0;
 	public $lasttimeusersspoke = 0;
-
+	public $admins = array();
 	public $loadedconfig = false;
 	public $connectedtoserver = false;
 	public $gotHost = false;
 	public $identified = false;
 	public $joinedchannels = 0;
 	public $commandqueue =array();
-	public $busy = 0;
+
 
 	public function __construct(){
 		//load configuration
@@ -89,6 +89,7 @@ class ircbot{
 				}
 			}
 		} else {
+			throw new Exception('El directorio de comandos no existe.');
 			throw new Exception('El directorio de comandos no existe.');
 		}
 
@@ -263,7 +264,7 @@ class ircbot{
 			}
 
 			flush(); //This flushes the output buffer forcing the text in the while loop to be displayed "On demand"
-			
+
 			$currenttime = time();
 			if ( $currenttime - $lastdbrefresh > 60*5){
 				$db = new clsDb();
@@ -274,13 +275,17 @@ class ircbot{
 		}
 	}
 
-	public function reply($reply){
+	public function reply($reply, $channel, $nick){
 		$reply = rtrim($reply);
 		$reply .= "\n";
-		if ( ! fwrite($this->socket, "PRIVMSG " . $this->currentchannel . " :" . $reply)){
+		$channel = trim($channel);
+		$nick = trim($nick);
+		if ( ! fwrite($this->socket, "PRIVMSG " . $channel . $nick . " :" . $reply)){
 			throw new Exception('Could not send ' . $reply);
 		}
+
 	}
+
 
 	public function sendraw($cmd){
 		$cmd = rtrim($cmd);
@@ -298,148 +303,36 @@ class ircbot{
 		global $commands;
 		global $helpArr;
 		global $db;
-		//Break the line into its parts step by step.
+		global $config;
 
-		//Sample line
-		//:joel!~Joel@cpe-76-87-50-64.socal.res.rr.com PRIVMSG #juchipila :hola boti
-
-
-		if ( $this->debug ){
-			print "\n============== start debug line ==============================\n";
-			print '(1) $line = ' . $line . "\n";
+		$parser = new privmsg_parser($line);
+		$line = $parser->getCleanMessage();
+		$userisadmin = false;
+		if ( in_array($parser->nick, $this->admins)){
+			$userisadmin = true;
 		}
-
-
-		//remove first colon
-		$line = substr($line, 1);
-		if ( $this->debug ){
-			print '(2) $line = ' . $line . "\n";
-		}
-
-		//detect who sent the message
-		$userspeaking = substr($line, 0, strpos($line, '@'));
-		$line = substr($line, strlen($userspeaking));
-		$line = trim($line);
-
-
-		//empezamos obteniendo el nick
-		$nick = $userspeaking;
-		if ( strpos($nick, '!')){
-			$nick = substr($nick, 0, strpos($nick, '!'));
-		}
-
-
-		if ( $this->debug ){
-			print '(3) $line = ' . $line . "\n";
-			print '$userspeaking = ' . $userspeaking . "\n";
-			print '$nick = ' . $nick . "\n";
-		}
-
-		//the mask crap
-		$mask = substr($line, 0, strpos($line, ' '));
-		$line = substr($line, strlen($mask));
-		$line = trim($line);
-		if ( $this->debug ){
-			print '(4) $line = ' . $line . "\n";
-			print '$mask = ' . $mask . "\n";
-		}
-
-		//see if the speaker is an admin
-		$ipfrommask = trim($mask);
-		$ipfrommask = preg_replace("/^@/", "", $ipfrommask);
-		//first test for ipv6 ips
-		if ( preg_match("/^((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?$/", $ipfrommask)){
-			//its an ipv6
-		} else {
-			$ipfrommask = preg_replace("/[^0-9\._-]/", "", $ipfrommask);
-			$ipfrommask = preg_replace("/[^0-9]/", ".", $ipfrommask);
-			$ipfrommask = preg_replace("/^\.*/", "", $ipfrommask);
-			$ipfrommask = preg_replace("/\.*$/", "", $ipfrommask);
-		}
-
-		if ( in_array($ipfrommask, $this->adminips)){
-			$isadmin = true;
-		} else {
-			$isadmin = false;
-		}
-
-		if ( $this->debug ){
-			print '$ipfrommask = ' . $ipfrommask . "\n";
-			print '$isadmin = ' . $isadmin . "\n";
-		}
-
-
-		//PRIVMSG
-		$line = substr($line, strlen('PRIVMSG '));
-		if ( $this->debug ){
-			print '(5) $line = ' . $line . "\n";
-		}
-
-		//channel name
-		$line = trim($line);
-		$channel = substr($line, 0, strpos($line, ' '));
-		$channel = trim($channel);
-		$line = substr($line, strlen($channel));
-		if ( $this->debug ){
-			print '$channel = ' . $channel . "\n";
-			print '(6) $line = ' . $line . "\n";
-		}
-
-		//remove a colon
-		$line = trim($line);
-		$line = substr($line, 1);
-		$line = trim($line);
-		if ( $this->debug ){
-			print '(7) $line = ' . $line . "\n";
-		}
-
-		/*
-		//get rid of formatting characters
-		$formattingchars = array();
-		$formattingchars[] = chr(hexdex('1f'));//underline
-		$formattingchars[] = chr(hexdec(2)); //bold
-		$formattingchars[] = chr(hexdec(16)); //white text on black background
-		*/
-
 		//first character
 		$firstchar = substr($line, 0,1);
-		$firstword = substr($line, 0, (strpos($line, " ") ? strpos($line, " ") : strlen($line) ) );
-		$commandname = substr($firstword, 1);
-		$commandname = strtolower(trim($commandname));
+		if ( $firstchar ==  $config->commandchar ){
+			$firstword = substr($line, 0, (strpos($line, " ") ? strpos($line, " ") : strlen($line) ) );
+			$commandname = substr($firstword, 1);
+			$commandname = strtolower(trim($commandname));
 
-		if ( $this->debug ){
-			print '(8) $line = ' . $line . "\n";
-			print '$firstchar = ' . $firstchar . "\n";
-			print '$firstword = ' . $firstword . "\n";
-			print '$commandname = ' . $commandname . "\n";
-			//print_r($commands);
-			print "\n";
-		}
-
-
-
-		//process commands issued
-		if ( $firstchar == $this->commandchar){
 			if ( in_array($commandname, array_keys($commands))){
-				$this->busy = true;
 				$arguments = substr($line, strlen($firstword));
 				$arguments = trim($arguments);
-				if ( $this->debug){
-					print '$arguments = ' . $arguments . "\n";
-				}
-
 				$command = new $commandname($arguments);
 				$command->setSocket($this->socket);
-				$command->setCurrentChannel($channel);
-				$command->setAdminFlag($isadmin);
-				$command->setNick($nick);
+				$command->setCurrentChannel($parser->channel);
+				$command->setAdminFlag($userisadmin);
+				$command->setNick($parser->nick);
 
 				$runcommand = false;
 				if ( $command->ispublic()){
 					$channels = $command->getChannels();
 					if ( is_array($channels)){
 						if ( count($channels)){
-							if ( in_array($channel, $channels)){
+							if ( in_array($parser->channel, $channels)){
 								$runcommand = true;
 							}
 						} else {
@@ -448,10 +341,10 @@ class ircbot{
 					} else {
 						$runcommand = true;
 					}
-				} elseif ( $isadmin ){
+				} elseif ( $userisadmin ){
 					$runcommand = true;
 				} else {
-					$this->reply("Lo siento, pero solo obedezco a mi amo.", $channel);
+					$this->reply("Lo siento, pero solo obedezco a mi amo.", $parser->channel, $parser->nick);
 				}
 
 				if ( $runcommand ){
@@ -459,48 +352,28 @@ class ircbot{
 					$command->write();
 					$command->afterprocess();
 				}
-			} else {
-				//throw new Exception(' unknown command ' . $commandname);
 			}
 		}
 
+	}
 
-		//register the message in chatlastseen table for reference
-		$sql = "update chatlastseen
-				set message = :message,
-				messagetime = now()
-				where nick = :nick
-				and channel = :channel";
-		$r = $db->Parse($sql, 1);
-		$r->Bind(":message", $line);
-		$r->Bind(":nick", $nick);
-		$r->Bind(":channel", $channel);
-		$r->Execute();
-		if ( $r->RowCount() > 0){
-			//ok
+	public function addAdmin($admin){
+		$this->admins[] = $admin;
+	}
+
+	public function showAdmins(){
+		if (empty($this->admins)){
+			print 'no hay admins';
 		} else {
-			$sql = "insert into chatlastseen
-					(nick, channel, message, messagetime)
-					values
-					(:nick, :channel, :message, now())";
-			$r = $db->Parse($sql, 1);
-			$r->Bind(":message", $line);
-			$r->Bind(":nick", $nick);
-			$r->Bind(":channel", $channel);
-			$r->Execute();
+			foreach ($this->admins as $key => $admin ){
+				print 'admin[' . $key . '] = '.  $admin . "\n";
+			}
 		}
-
-		/*
-		$caracteres = preg_split("//", $line, null, PREG_SPLIT_NO_EMPTY);
-		foreach ( $caracteres as $pos => $car){
-			print $pos . ' -> '  . $car . " -> " . dechex(ord($car)) .  "\n";
-		}
-		*/
-
 	}
 
 	public function __toString(){
 		global $commands;
+		global $commandsDir;
 		$ret  = '';
 		$ret .= '$commandsDir = ' . $commandsDir . "\n";
 		$ret .= '$this->loadedconfig = ' . $this->loadedconfig . "\n";
