@@ -48,4 +48,14 @@ class privmsg_parser{
 
 		$this->message = $line;
 	}
+
+	public function getCleanMessage(){
+		global $formattingchars;
+		$message = $this->message;
+		foreach ( $formattingchars as $char ){
+			$message = str_replace($char, '', $message);
+		}
+		return $message;
+	}
+
 }
