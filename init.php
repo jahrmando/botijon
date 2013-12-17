@@ -13,7 +13,7 @@ if ( ! include_once("include/functions.php")){
 	throw new Exception('No se pudo incluir el archivo de funciones');
 }
 
-//include the proces id manage
+//include the proces id manager
 if ( ! include_once("include/pidmanager.php")){
 	throw new Exception('No se pudo incluir el archivo manejador de procesos.');
 }
@@ -33,6 +33,11 @@ if ( file_exists('config/twitter-config.php')){
 	if ( ! include_once("config/twitter-config.php")){
 		throw new Exception('No se pudo incluir el archivo de configuracion del bot.');
 	}
+}
+
+//include privmsg_parser class
+if ( ! include_once("include/privmsg_parser.php")){
+	throw  new Exception('No se pudo incluir la clase privmsg_parser.php');
 }
 
 //include irc bot class
