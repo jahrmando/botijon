@@ -18,7 +18,7 @@ class acortar extends command {
 	}
 
 	public function process($args){
-		$this->output = "";
+		$answer = "";
 		$args = trim($args);
 		if( strlen($args)>0){
 			try{
@@ -33,7 +33,7 @@ class acortar extends command {
 					$respuesta = curl_exec($ch);
 					curl_close($ch);
 					$datos = json_decode($respuesta);
-					$this->output = $datos->id;
+					$answer = $datos->id;
 				}else{
 					$url = urlencode( $args );
 					if( !preg_match("/^http/",$url ) ){
@@ -43,19 +43,20 @@ class acortar extends command {
 					$respuesta = file_get_contents("https://api-ssl.bitly.com/v3/user/link_save?access_token={$this->token}&longUrl={$url}");
 					$datos = json_decode($respuesta);
 					if( $datos->status_code == 500 ){
-						$this->output = "Tuvimos un problema acortando la url.";
+						$answer = "Tuvimos un problema acortando la url.";
 					}else{
-						$this->output = $datos->data->link_save->link;
+						$answer = $datos->data->link_save->link;
 					}
 				}
-				if( strlen($this->output) > strlen($args) ){
-					$this->output = "La tienes muy chiquita, no te la puedo recortar más.";
+				if( strlen($answer) > strlen($args) ){
+					$answer = "La tienes muy chiquita, no te la puedo recortar más.";
 				}
 			}catch(Exception $e){
-				$this->output = "Tuve un problema acortando la url proporcionada, intenta de nuevo por favor.";
+				$answer = "Tuve un problema acortando la url proporcionada, intenta de nuevo por favor.";
 			}
 		}else{
-			$this->output = "Ingresa una URL.";
+			$answer = "Ingresa una URL.";
 		}
+		$this->reply($answer, $this->currentchannel, $this->nick);
 	}
 }

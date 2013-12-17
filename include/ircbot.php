@@ -280,8 +280,14 @@ class ircbot{
 		$reply .= "\n";
 		$channel = trim($channel);
 		$nick = trim($nick);
-		if ( ! fwrite($this->socket, "PRIVMSG " . $channel . $nick . " :" . $reply)){
-			throw new Exception('Could not send ' . $reply);
+		if ( empty($channel) ){
+			if ( ! fwrite($this->socket, "PRIVMSG " . $nick . " :" . $reply)){
+				throw new Exception('Could not send ' . $reply);
+			}
+		} else {
+			if ( ! fwrite($this->socket, "PRIVMSG " . $nick . " :" . $reply)){
+				throw new Exception('Could not send ' . $reply);
+			}
 		}
 
 	}
@@ -326,6 +332,9 @@ class ircbot{
 				$command->setCurrentChannel($parser->channel);
 				$command->setAdminFlag($userisadmin);
 				$command->setNick($parser->nick);
+				if ( empty($parser->channel)){
+					$command->setQueryMessage(true);
+				}
 
 				$runcommand = false;
 				if ( $command->ispublic()){
