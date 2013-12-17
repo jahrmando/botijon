@@ -31,7 +31,14 @@ if ( ! include_once("config/config.php")){
 //include twitter configuration file if it exists
 if ( file_exists('config/twitter-config.php')){
 	if ( ! include_once("config/twitter-config.php")){
-		throw new Exception('No se pudo incluir el archivo de configuracion del bot.');
+		throw new Exception('No se pudo incluir el archivo de configuracion de twitter.');
+	}
+}
+
+//include shortener configuration file if it exists
+if ( file_exists('config/acortador-config.php')){
+	if ( ! include_once("config/acortador-config.php")){
+		throw new Exception('No se pudo incluir el archivo de configuracion del acortador de URLs.');
 	}
 }
 
