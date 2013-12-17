@@ -11,13 +11,13 @@ class adminlogin extends command {
 	}
 
 	public function process($args){
-		print 'processing adminlogin' . "\n";
 		global $irc;
 		if ( $args == $irc->botpassword ){
 			$irc->addAdmin($this->nick);
-			echo 'added admin' . $args;
+			$irc->reply('Autenticacion exitosa. Ahora eres admin.', $this->currentchannel, $this->nick);
+		} else {
+			$irc->reply('Lo siento... Contraseña inválida.', $this->currentchannel, $this->nick);
 		}
-		$irc->showAdmins();
 	}
 
 }
