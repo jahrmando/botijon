@@ -1,6 +1,7 @@
 config/config.php
 config/dbconfig.php
 config/twitter-config.php
+config/acortador-config.php
 sql/phpfunctions.sql
 sql/databasedump.sql
 *.komodoproject
