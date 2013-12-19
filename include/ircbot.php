@@ -364,6 +364,34 @@ class ircbot{
 			}
 		}
 
+		if ( ! empty($parser->channel) ){
+
+			//register the message in chatlastseen table for reference
+			$sql = "update chatlastseen
+					set message = :message,
+					messagetime = now()
+					where nick = :nick
+					and channel = :channel";
+			$r = $db->Parse($sql, 1);
+			$r->Bind(":message", $parser->getCleanMessage());
+			$r->Bind(":nick", $parser->nick);
+			$r->Bind(":channel", $parser->channel);
+			$r->Execute();
+			if ( $r->RowCount() > 0){
+				//ok
+			} else {
+				$sql = "insert into chatlastseen
+						(nick, channel, message, messagetime)
+						values
+						(:nick, :channel, :message, now())";
+				$r = $db->Parse($sql, 1);
+				$r->Bind(":message", $parser->getCleanMessage());
+				$r->Bind(":nick", $parser->nick);
+				$r->Bind(":channel", $parser->channel);
+				$r->Execute();
+			}
+		}
+
 	}
 
 	public function addAdmin($admin){

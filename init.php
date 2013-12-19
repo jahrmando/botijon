@@ -47,6 +47,14 @@ if ( ! include_once("include/privmsg_parser.php")){
 	throw  new Exception('No se pudo incluir la clase privmsg_parser.php');
 }
 
+
+
+//include figlet class
+if ( ! include_once("include/figlet.php")){
+	throw  new Exception('No se pudo incluir la clase figlet.php');
+}
+
+
 //include irc bot class
 if ( ! include_once("include/ircbot.php")){
 	throw  new Exception('No se pudo incluir la clase ircbot.php');
