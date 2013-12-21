@@ -49,6 +49,9 @@ class ircbot{
 	public function loadcommands(){
 		global $helpArr;
 		global $commands;
+		global $dbconfig;
+		global $systemroot;
+		global $dbh;
 		//include all commands
 		if (is_dir($this->commandsDir)) {
 			if ($dh = opendir($this->commandsDir)) {
@@ -70,6 +73,41 @@ class ircbot{
 							$commands[$commandname] = $thecommand;
 						}
 					}
+					//if command requires sql, make sure we have the tables available
+					if ( $thecommand->requiresSQL() ){
+
+						//check the tables that already exist in the db
+						$sql = "select * from sqlite_master";
+						$stmt = $dbh->prepare($sql);
+						$stmt->execute();
+						$existingtables = array();
+						while ($row = $stmt->fetch()){
+							if ( ! empty($row)){
+								if ( $row['type'] == 'table' ){
+									$existingtables[] = $row['name'];
+								}
+							}
+						}
+
+						$tablesrequired = $thecommand->getTableNames();
+						foreach ( $tablesrequired as $table ){
+							if ( in_array($table, $existingtables)){
+								print $table . ' already exists . ' . "\n";
+							} else {
+								$sqlarr = $thecommand->getSQL();
+								if ( is_array($sqlarr)){
+									foreach ($sqlarr as $ddl ){
+										try {
+											$sql = $ddl;
+											$dbh->exec($sql);
+										} catch (Exception $e ){
+											throw $e;
+										}
+									}
+								}
+							}
+						}
+					}
 				}
 				closedir($dh);
 			}
@@ -89,7 +127,6 @@ class ircbot{
 				}
 			}
 		} else {
-			throw new Exception('El directorio de comandos no existe.');
 			throw new Exception('El directorio de comandos no existe.');
 		}
 
@@ -308,8 +345,9 @@ class ircbot{
 	public function  processUserMessage($line){
 		global $commands;
 		global $helpArr;
-		global $db;
+		global $dbconfig;
 		global $config;
+		global $dbh;
 
 		$parser = new privmsg_parser($line);
 		$line = $parser->getCleanMessage();
@@ -366,29 +404,27 @@ class ircbot{
 
 		if ( ! empty($parser->channel) ){
 
+			if ( ! is_object($dbh)){
+				throw Exception('Invalid $dbh object');
+			}
+
 			//register the message in chatlastseen table for reference
-			$sql = "update chatlastseen
-					set message = :message,
-					messagetime = now()
-					where nick = :nick
-					and channel = :channel";
-			$r = $db->Parse($sql, 1);
-			$r->Bind(":message", $parser->getCleanMessage());
-			$r->Bind(":nick", $parser->nick);
-			$r->Bind(":channel", $parser->channel);
-			$r->Execute();
-			if ( $r->RowCount() > 0){
+			$sql = "update chatlastseen set message = :message, messagetime =  datetime('now') where nick = :nick and channel = :channel";
+			$stmt = $dbh->prepare($sql);
+			$stmt->bindParam(':message', $parser->getCleanMessage());
+			$stmt->bindParam(':nick', $parser->nick);
+			$stmt->bindParam(':channel', $parser->channel);
+			$stmt->execute();
+
+			if ( $stmt->RowCount() > 0){
 				//ok
 			} else {
-				$sql = "insert into chatlastseen
-						(nick, channel, message, messagetime)
-						values
-						(:nick, :channel, :message, now())";
-				$r = $db->Parse($sql, 1);
-				$r->Bind(":message", $parser->getCleanMessage());
-				$r->Bind(":nick", $parser->nick);
-				$r->Bind(":channel", $parser->channel);
-				$r->Execute();
+				$sql = "insert into chatlastseen (nick, channel, message, messagetime) values (:nick, :channel, :message,  datetime('now'))";
+				$stmt = $dbh->prepare($sql);
+				$stmt->bindParam(':message', $parser->getCleanMessage());
+				$stmt->bindParam(':nick', $parser->nick);
+				$stmt->bindParam(':channel', $parser->channel);
+				$stmt->execute();
 			}
 		}
 
@@ -408,23 +444,4 @@ class ircbot{
 		}
 	}
 
-	public function __toString(){
-		global $commands;
-		global $commandsDir;
-		$ret  = '';
-		$ret .= '$commandsDir = ' . $commandsDir . "\n";
-		$ret .= '$this->loadedconfig = ' . $this->loadedconfig . "\n";
-		$ret .= '$this->connectedtoserver = ' . $this->connectedtoserver . "\n";
-		$ret .= '$this->gotHost = ' . $this->gotHost . "\n";
-		$ret .= '$this->identified = ' . $this->identified . "\n";
-		$ret .= '$this->joinedchannels = ' . $this->joinedchannels . "\n";
-		$ret .= '$this->host = ' . $this->host . "\n";
-		$ret .= '$this->nick = ' . $this->nick . "\n";
-		$ret .= '$this->ip = ' . $this->ip . "\n";
-		$ret .= '$this->server = ' . $this->server . "\n";
-		$ret .= '$this->realname = ' . $this->realname . "\n";
-		$ret .= '$this->channels = ' . join(", ", $this->channels) ."\n";
-		$ret .= '$commands = ' . join (", ", $commands) . "\n";
-		return $ret;
-	}
 }

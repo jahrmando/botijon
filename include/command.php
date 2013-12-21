@@ -11,10 +11,16 @@ abstract class command{
 	public $nick;
 	public $server;
 	public $isquerymessage = false;
+	public $usesSQL = false;
+	public $tablenames = array();
+	public $sql = array();
 
 	public function __construct(){
 		$this->name = '';
 		$this->public = false;
+		$this->usesSQL = false;
+		$this->tablenames = array();
+		$this->sql = '';
 	}
 
 	public function setNick($nick){
@@ -142,4 +148,18 @@ abstract class command{
 		$ret .= "\n";
 		return $ret;
 	}
+
+
+	public function requiresSQL(){
+		return $this->usesSQL;
+	}
+
+	public function getTableNames() {
+		return $this->tablenames;
+	}
+
+	public function getSQL(){
+		return $this->sql;
+	}
+
 }

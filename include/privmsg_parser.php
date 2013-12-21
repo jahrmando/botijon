@@ -32,12 +32,10 @@ class privmsg_parser{
 		$channel = substr($line, 0, strpos($line, ' '));
 		$line = substr($line, strlen($channel));
 		if ( substr($channel,0, 1) == '#' ){
-			print "a\n";
 			$this->channel = $channel;
 			$targetuser = '';
 			$this->inchannel = true;
 		} else {
-			print "b\n";
 			$this->channel = '';
 			$this->targetuser = $channel;
 			$this->inchannel = false;

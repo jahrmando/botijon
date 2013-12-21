@@ -11,6 +11,7 @@ try {
 	}
 	$irc = new ircbot();
 	$irc->run();
+	$dbh->close();
 } catch (Exception $e){
 	print "Ocurrió un error durante la ejecucion: " . $e->getMessage();
 }

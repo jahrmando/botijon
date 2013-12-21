@@ -18,9 +18,6 @@ if ( $dev ){
 	$config->debug = true; //print some extra information that cuould be useful for debugging purposes
 	$config->commandchar = '!';
 	$config->channels = array("#your.testing.channel.s");
-	$config->maxMessages[3] = 4; //4 messages in 3 seconds
-	$config->maxMessages[4] = 6; //6 messages in 4 seconds
-	$config->maxMessages[5] = 9; //9 messages in 5 seconds
 
 } else {
 	// valores de configuracion para modo real o produccion
@@ -37,8 +34,5 @@ if ( $dev ){
 	$config->debug = false;//print some extra information that cuould be useful for debugging purposes
 	$config->commandchar = '!';
 	$config->channels = array("#yourchannel1", "#yourchannel2", "#yourchanneletc");
-	$config->maxMessages[3] = 4; //4 messages in 3 seconds
-	$config->maxMessages[4] = 6; //6 messages in 4 seconds
-	$config->maxMessages[5] = 9; //9 messages in 5 seconds
 
 }
