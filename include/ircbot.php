@@ -303,12 +303,6 @@ class ircbot{
 			flush(); //This flushes the output buffer forcing the text in the while loop to be displayed "On demand"
 
 			$currenttime = time();
-			if ( $currenttime - $lastdbrefresh > 60*5){
-				$db = new clsDb();
-				if ( ! $db instanceof clsDb ){
-					throw new Exception('No se pudo instanciar la clase manejadora de la base de datos');
-				}
-			}
 		}
 	}
 
