@@ -7,3 +7,4 @@ sql/databasedump.sql
 *.komodoproject
 pid/*
 nohup.out
+botijon.sq3

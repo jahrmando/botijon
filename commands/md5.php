@@ -15,7 +15,7 @@ class md5 extends command {
 	}
 
 	public function process($args){
-		$this->output = md5($args);
+		$this->output = "El md5 de la cadena '{$args}' es '" . md5($args) . "'";
 		$this->save($args);
 	}
 
@@ -25,10 +25,10 @@ class md5 extends command {
 
 		$sql = "select count(1) as count from hashes where string = :string";
 		$r = $dbh->prepare($sql);
-		$r->bindParam("string", $args, PDO_PARAM_STR);
+		$r->bindParam("string", $args);
 		$r->Execute();
 		$row = $r->fetch();
-		if ( $row->count == 0 ){
+		if ( $row['count'] == 0 ){
 			$md5 = md5($args);
 			$sha1 = sha1($args);
 			$sql = "insert into hashes ( string , md5, sha1) values (:string, :md5, :sha1)";

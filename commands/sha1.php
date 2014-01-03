@@ -15,20 +15,20 @@ class sha1 extends command {
 	}
 
 	public function process($args){
-		$this->output = sha1($args);
+		$this->output = "El sha1 de la cadena '{$args}' es '" . sha1($args) . "'";
 		$this->save($args);
 	}
 
 	protected function save($args){
-		//store the md5 into a database;
+		//store the sha1 into a database;
 		global $dbh;
 
 		$sql = "select count(1) as count from hashes where string = :string";
 		$r = $dbh->prepare($sql);
-		$r->bindParam("string", $args, PDO_PARAM_STR);
+		$r->bindParam("string", $args);
 		$r->Execute();
 		$row = $r->fetch();
-		if ( $row->count == 0 ){
+		if ( $row['count'] == 0 ){
 			$md5 = md5($args);
 			$sha1 = sha1($args);
 			$sql = "insert into hashes ( string , md5, sha1) values (:string, :md5, :sha1)";
@@ -39,4 +39,5 @@ class sha1 extends command {
 			$r->Execute();
 		}
 	}
+
 }
