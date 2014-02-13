@@ -10,8 +10,6 @@ class google extends command {
 		return "Uso: !google <criterio de búsqueda> . Devuelve los 3 primeros resultados que arroja google.";
 	}
 	
-	
-	
 	/**
 	 * 
 	 * The following function was taken from 
@@ -43,16 +41,13 @@ class google extends command {
 	    curl_close($ch);
 	    //decode and return the response
 	    return json_decode($body);
-	}	
+	}
 	
-	
-	public function process($args){		
+	public function process($args){
 		$this->output = "";
 		$args = trim($args);
 		$args = str_replace(" ", "+",$args);
-				
 		$rez = $this->google_search_api( array('q' => $args) );
-		 
 		$results = $rez->responseData->results;
 		if ( empty($results)){
 			$this->output = 'No results, sorry.';
@@ -63,9 +58,6 @@ class google extends command {
 				$count++;
 				if ( $count >= 3 ) break;
 			}
-		}		
+		}
 	}
 }
-
-
-		 
