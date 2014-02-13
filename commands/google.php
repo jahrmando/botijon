@@ -59,7 +59,7 @@ class google extends command {
 		} else {
 			$count = 0;
 			foreach ($results as $result){
-				$this->output .= $result->url . "\n";
+				$this->output .= urldecode(urldecode($result->url)) . "\n";
 				$count++;
 				if ( $count >= 3 ) break;
 			}
