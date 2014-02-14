@@ -5,18 +5,18 @@ class dicc extends command {
 		$this->name = 'dicc';
 		$this->public = true;
 	}
-	
+
 	public function help(){
 		return "Uso: !definicion <palabra> . Devuelve el significado de la palabra según la RAE.";
 	}
-	
+
 	public function process($args){
 		$args = trim($args);
-		$cArgs = count(split(" ",$args));
+		$cArgs = count(explode(" ",$args));
 		$this->output = "";
-		if( $cArgs>1 ){
+		if( $cArgs > 1 ){
 			$this->output = "Debe ser una palabra no una frase";
-		}else{
+		} else {
 			if( !strlen($args)>0 ){
 				$this->output = "Cadena demasiado corta.";
 			}else{
