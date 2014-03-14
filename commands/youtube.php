@@ -26,23 +26,23 @@ class youtube extends command {
 				curl_close($ch);
 				$resultados = json_decode($respuesta);
 				if( isset($resultados->error) ){
-					$this->output = "Tuvimos un problema en la busqueda: ".$resultados->error->errors[0]->reason;
+					$this->output = "Ocurrió un problema al realizar la busqueda: ".$resultados->error->errors[0]->reason;
 				}else{
 					if( count($resultados->items)>0 ){
 						$videos = array();
 						foreach( $resultados->items as $video ){
-							array_push( $videos , $video->snippet->title." - http://http://www.youtube.com/watch?v=".$video->id->videoId  );
+							array_push( $videos , "http://http://www.youtube.com/watch?v=".$video->id->videoId  . " - " . $video->snippet->title);
 						}
 						$this->output = join("\n", $videos);
 					}else{
-						$this->output = "No obtuve resultados de tu busqueda";
+						$this->output = "No se pudieron obtener resultados al realizar la busqueda indicada.";
 					}
 				}
 			}catch(Exception $e){
-				$this->output = "Tuve un problema al realizar tu busqueda.";
+				$this->output = "Ocurrió un problema al realizar la busqueda: " . $e->getMessage();
 			}
 		}else{
-			$this->output = "Digame que buscar, tampoco soy adivino.";
+			$this->output = "Digame que buscar que no soy adivino.";
 		}
 	}
 }
