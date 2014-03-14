@@ -17,7 +17,7 @@ class youtube extends command {
 		$this->output = "";
 		if( strlen(trim($args)) > 0 ){
 			try{
-				$url = "https://www.googleapis.com/youtube/v3/search?part=id%2Csnippet&maxResults=3&q=".urlencode($args)."&key=".$this->apikey;
+				$url = "https://www.googleapis.com/youtube/v3/search?part=id%2Csnippet&maxResults=3&type=video&q=".urlencode($args)."&key=".$this->apikey;
 				$ch = curl_init();
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 				curl_setopt($ch, CURLOPT_URL,$url);
