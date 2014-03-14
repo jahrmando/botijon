@@ -86,6 +86,13 @@ if ( file_exists('config/acortador-config.php')){
 	}
 }
 
+//include youtube configuration file if it exists
+if ( file_exists('config/youtube-config.php')){
+	if ( ! include_once("config/youtube-config.php")){
+		throw new Exception('No se pudo incluir el archivo de configuracion para busquedas en YouTube.');
+	}
+}
+
 //include privmsg_parser class
 if ( ! include_once("include/privmsg_parser.php")){
 	throw  new Exception('No se pudo incluir la clase privmsg_parser.php');

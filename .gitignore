@@ -2,6 +2,7 @@ config/config.php
 config/dbconfig.php
 config/twitter-config.php
 config/acortador-config.php
+config/youtube-config.php
 sql/phpfunctions.sql
 sql/databasedump.sql
 *.komodoproject
