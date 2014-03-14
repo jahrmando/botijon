@@ -31,7 +31,7 @@ class youtube extends command {
 					if( count($resultados->items)>0 ){
 						$videos = array();
 						foreach( $resultados->items as $video ){
-							array_push( $videos , "http://http://www.youtube.com/watch?v=".$video->id->videoId  . " - " . $video->snippet->title);
+							array_push( $videos , "http://www.youtube.com/watch?v=".$video->id->videoId  . " - " . $video->snippet->title);
 						}
 						$this->output = join("\n", $videos);
 					}else{
