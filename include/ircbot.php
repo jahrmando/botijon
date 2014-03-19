@@ -62,7 +62,13 @@ class ircbot{
 
 					include_once ($this->commandsDir . '/' . $file);
 					$commandname = preg_replace("/\.php$/", "", $file);
-					$thecommand = new $commandname();
+					$thecommand = new $commandname();					
+					if ($thecommand->requiresConfig()){
+						$configfile = $systemroot . '/config/' . $thecommand->getConfigFileName();
+						if (! file_exists($configfile)){
+							continue; //skip command if the required config file is absent
+						}
+					}
 					$commandserver = $thecommand->getServer();
 					//if no	command server specified, then the command should be available everywhere
 					if ( empty($commandserver)){

@@ -13,13 +13,16 @@ class twitter extends command {
 	{
 		$this->name = "twitter";
 		$this->public = true;
+		$this->usesconfig = true;
 		global $config;
-		$this->config =array(
-			"consumer_key"		=>	$config->twitter->consumer_key,
-			"consumer_secret"	=>	$config->twitter->consumer_secret,
-			"access_token"		=>	$config->twitter->access_token,
-			"access_secret"		=>	$config->twitter->access_token_secret
-		);
+		if ( isset($config->twitter)){			
+			$this->config =array(
+				"consumer_key"		=>	$config->twitter->consumer_key,
+				"consumer_secret"	=>	$config->twitter->consumer_secret,
+				"access_token"		=>	$config->twitter->access_token,
+				"access_secret"		=>	$config->twitter->access_token_secret
+			);
+		}
 	}
 
 	public function help(){

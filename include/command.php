@@ -14,6 +14,7 @@ abstract class command{
 	public $usesSQL = false;
 	public $tablenames = array();
 	public $sql = array();
+	public $usesconfig = false;
 
 	public function __construct(){
 		$this->name = '';
@@ -162,4 +163,11 @@ abstract class command{
 		return $this->sql;
 	}
 
+	public function requiresConfig(){
+		return $this->usesconfig;
+	}
+
+	public function getConfigFileName(){
+		return $this->name . '-config.php';
+	}
 }

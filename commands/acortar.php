@@ -5,11 +5,12 @@ class acortar extends command {
 	{
 		$this->name = "acortar";
 		$this->public = true;
+		$this->usesconfig = true;
 		global $config;
-		$this->type = $config->acortador->type;
+		$this->type = $config->acortar->type;
 		if( $this->type != 'google'){
 			$this->type = 'bitly';
-			$this->token = $config->acortador->token;
+			$this->token = $config->acortar->token;
 		}
 	}
 

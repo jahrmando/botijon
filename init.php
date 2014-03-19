@@ -73,23 +73,29 @@ try {
 }
 
 //include twitter configuration file if it exists
-if ( file_exists('config/twitter-config.php')){
-	if ( ! include_once("config/twitter-config.php")){
-		throw new Exception('No se pudo incluir el archivo de configuracion de twitter.');
+if ( file_exists('commands/twitter.php')){
+	if ( file_exists('config/twitter-config.php')){
+		if ( ! include_once("config/twitter-config.php")){
+			throw new Exception('No se pudo incluir el archivo de configuracion de twitter.');
+		}
 	}
 }
 
 //include shortener configuration file if it exists
-if ( file_exists('config/acortador-config.php')){
-	if ( ! include_once("config/acortador-config.php")){
-		throw new Exception('No se pudo incluir el archivo de configuracion del acortador de URLs.');
+if ( file_exists('commands/acortar.php')){
+	if ( file_exists('config/acortar-config.php')){
+		if ( ! include_once("config/acortar-config.php")){
+			throw new Exception('No se pudo incluir el archivo de configuracion del comando acortar.');
+		}
 	}
 }
 
 //include youtube configuration file if it exists
-if ( file_exists('config/youtube-config.php')){
-	if ( ! include_once("config/youtube-config.php")){
-		throw new Exception('No se pudo incluir el archivo de configuracion para busquedas en YouTube.');
+if ( file_exists('commands/youtube.php')){
+	if ( file_exists('config/youtube-config.php')){
+		if ( ! include_once("config/youtube-config.php")){
+			throw new Exception('No se pudo incluir el archivo de configuracion para busquedas en YouTube.');
+		}
 	}
 }
 

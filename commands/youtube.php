@@ -5,8 +5,11 @@ class youtube extends command {
 	{
 		$this->name = "youtube";
 		$this->public = true;
+		$this->usesconfig = true;
 		global $config;
-		$this->apikey = $config->youtube->apikey;
+		if ( isset($config->youtube)){
+			$this->apikey = $config->youtube->apikey;
+		}
 	}
 
 	public function help(){
