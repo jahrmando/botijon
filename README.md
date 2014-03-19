@@ -28,26 +28,26 @@ Requerimientos
 
 Debido a que varias funciones del bot requieren del uso de API's, para poder ejecutar el bot de manera correcta se requiere un token de las siguientes cuentas, para ello se requiere una cuenta.
 
-bitly: 		https://bitly.com => Command{Acortador}.
-twitter: 	https://dev.twitter.com => Command{twitter}
-youtube:	https://cloud.google.com/console => Command{Youtube}
+...bitly: 		https://bitly.com => Command{Acortador}.
+...twitter: 	https://dev.twitter.com => Command{twitter}.
+...youtube:	https://cloud.google.com/console => Command{Youtube}.
 
-sqlite3:
-			CentOS/Fedora/RHEL
+...sqlite3:
+			...CentOS/Fedora/RHEL
 			<code>yum -y install sqlite</code>
-			Debian/Ubuntu
+			...Debian/Ubuntu
 			<code>apt-get install sqlite</code>
 
-modulo php-pdo:
-			CentOS/Fedora/RHEL
+...modulo php-pdo:
+			...CentOS/Fedora/RHEL
 			<code>yum -y install php-pdo</code>
-			Debian/Ubuntu
+			...Debian/Ubuntu
 			<code>apt-get install php-pdo</code>
 
 Configuracion
 -----------------------------------
-sqlite3:
-			Dentro de la carpeta sql/ se encuentra el esquema de base de datos , esta debe de ser cargada al engine de sqlite.
+...sqlite3:
+			...Dentro de la carpeta sql/ se encuentra el esquema de base de datos , esta debe de ser cargada al engine de sqlite.
 			<code> nix_promp$ sqlite3 db_name < schema_name </code>
 
 Como agregar funciones 
