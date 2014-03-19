@@ -1,0 +1,6 @@
+config.php
+dbconfig.php
+twitter-config.php
+acortar-config.php
+youtube-config.php
+*.config.php:
