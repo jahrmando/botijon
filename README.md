@@ -45,11 +45,14 @@ Debian/Ubuntu
 <code>apt-get install php-pdo</code>
 		
 
-Configuracion
+Configuracion de la BD Sqlite
 -----------------------------------
 1. sqlite3:
-Dentro de la carpeta sql/ se encuentra el esquema de base de datos , esta debe de ser cargada al engine de sqlite.
-<code> nix_promp$ sqlite3 db_name < schema_name </code>
+Dentro de la carpeta config/ se encuentra el archivo dbconfig-sample.php.
+Renombralo como dbconfig.php y asignale el valor a la variable $dbconfig->db
+con el nombre del archivo de la base de datos que el bot va a utilizar.
+(si no existe, el mismo bot creara la bd)
+
 
 Como agregar funciones 
 -----------------------------------
