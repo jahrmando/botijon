@@ -38,18 +38,4 @@ class ensartada extends command {
 		$this->output = join("\n", $lines);
 	}
 
-
-	public function write(){
-		//to be overriden by children classes
-		$temp = preg_split("/\n/", $this->output, null, PREG_SPLIT_NO_EMPTY);
-
-		foreach ( $temp as $linenumber => $line){
-			$this->sendraw($line);
-			$microseconds = $linenumber * 150000;
-			usleep($microseconds);
-		}
-
-	}
-
-
 }
