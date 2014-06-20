@@ -28,7 +28,7 @@ class seen extends command {
 				from
 					chatlastseen
 				where
-					nick = :nick
+					nick = :nick collate nocase
 					and
 					channel = :channel";
 		$r = $dbh->prepare($sql);
@@ -40,6 +40,7 @@ class seen extends command {
 		if ( empty($row)){
 			$this->output = "No se tienen registros del usuario {$nick}";
 		} else {
+			$nick = $row['nick'];
 
 			$tiemporestante = $row['timediff'];
 
