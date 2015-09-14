@@ -14,10 +14,10 @@ class cve extends command
     public function help()
     {
         $chain = 'Uso: Despliega informacion de incidentes de seguridad (CVE)' . "\n";
-        $chain .= '$cve 0000-00000 d1 d2 dN.. . Busqueda por clave CVE, (4 max.)' . "\n";
-        $chain .= '$cve last . Despliega los ultimos 12 CVEs reportados' . "\n";
-        $chain .= '$cve browse <vendor> . Despliega productos del vendedor (Limitado)' . "\n";
-        $chain .= '$cve browse <vendor> <product> . Busca incidentes del producto (10 max.)' . "\n";
+        $chain .= '!cve 0000-00000 d1 d2 dN.. . Busqueda por clave CVE, (4 max.)' . "\n";
+        $chain .= '!cve last . Despliega los ultimos 12 CVEs reportados' . "\n";
+        $chain .= '!cve browse <vendor> . Despliega productos del vendedor (Limitado)' . "\n";
+        $chain .= '!cve browse <vendor> <product> . Busca incidentes del producto (10 max.)' . "\n";
         return $chain;
     }
 

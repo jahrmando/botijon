@@ -13,7 +13,7 @@ class isdown extends command
 
     public function help()
     {
-        return 'Uso: $isdown <Valid Domain> . Verifica el estado de un sitio web (Solo HTTP)';
+        return 'Uso: !isdown <Valid Domain> . Verifica el estado de un sitio web (Solo HTTP)';
     }
 
     protected function Request($args)
